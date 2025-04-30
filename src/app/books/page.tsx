@@ -1,9 +1,10 @@
 import Book from "@/components/book";
 import { Book as BookModel } from "@/models/books";
+import BookSearch from "./BookSearch";
 
 interface GoogleVolumeListResponse {
   totalItems: number;
-  items: GoogleVolume[];
+  items?: GoogleVolume[];
 }
 
 interface GoogleVolume {
@@ -56,7 +57,7 @@ async function searchBooks(searchTerm: string): Promise<BookModel[]> {
 
   const { items } = (await searchResponse.json()) as GoogleVolumeListResponse;
 
-  return items.map(toBook);
+  return items?.map(toBook) ?? [];
 }
 
 export default async function Books({
@@ -66,21 +67,28 @@ export default async function Books({
 }) {
   const search = (await searchParams).search;
 
-  if (!search) {
-    return <div>Nothing searched for</div>;
-  }
+  const searchTerm = Array.isArray(search) ? search.join(" ") : search;
+  let books: BookModel[] = [];
 
-  const searchTerm: string = Array.isArray(search) ? search.join(" ") : search;
-  let books: BookModel[];
-  try {
-    books = await searchBooks(searchTerm);
-  } catch {
-    return <div>Oops something went wrong</div>;
+  const trimmedSearchTerm = searchTerm?.trim();
+
+  if (trimmedSearchTerm) {
+    try {
+      books = await searchBooks(trimmedSearchTerm);
+    } catch {
+      return <div>Oops something went wrong</div>;
+    }
   }
 
   return (
     <div className="flex flex-col gap-6 p-4">
-      <div>You are searching for {searchTerm}.</div>
+      <BookSearch initialSearchTerm={searchTerm} />
+
+      {books.length === 0 && trimmedSearchTerm && (
+        <div className="bg-red-100 rounded p-4 ">
+          No Results found for {searchTerm}
+        </div>
+      )}
 
       {books.map((book) => (
         <Book key={book.googleId} info={book} />
@@ -89,4 +97,5 @@ export default async function Books({
   );
 }
 
-// styling for small verison with added fields (auther, publisher, etc)
+// style input
+// Load individual book pages with info and styling

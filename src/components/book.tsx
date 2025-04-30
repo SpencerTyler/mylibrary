@@ -1,4 +1,5 @@
 import { Book as BookModel } from "@/models/books";
+import Link from "next/link";
 
 interface BookProps {
   info: BookModel;
@@ -11,7 +12,9 @@ export default function Book({ info }: BookProps) {
         {info.thumbnail && <img src={info.thumbnail} alt="Book Cover" />}
       </div>
       <div className="flex flex-col gap-3">
-        <h3 className="font-semibold text-lg md:text-xl">{info.title}</h3>
+        <Link href={`/books/${info.googleId}`}>
+          <h3 className="font-semibold text-lg md:text-xl">{info.title}</h3>
+        </Link>
         <div className="flex flex-row gap-2">
           <div className="md:hidden">
             {info.thumbnail && <img src={info.thumbnail} alt="Book Cover" />}
