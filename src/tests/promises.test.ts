@@ -10,7 +10,7 @@ it("promises", async () => {
   await vi.waitFor(() =>
     myPromise
       .then((value) => console.log(value))
-      .catch((error) => console.log("handle error"))
+      .catch(() => console.log("handle error"))
       .finally(() => console.log("finally"))
   );
 });
