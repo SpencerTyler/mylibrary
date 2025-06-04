@@ -1,46 +1,7 @@
 import Book from "@/components/book";
 import { Book as BookModel } from "@/models/books";
 import BookSearch from "./BookSearch";
-
-interface GoogleVolumeListResponse {
-  totalItems: number;
-  items?: GoogleVolume[];
-}
-
-interface GoogleVolume {
-  id: string;
-  volumeInfo: {
-    title: string;
-    authors: string[];
-    categories: string[];
-    description: string;
-    pageCount: number;
-    publisher: string;
-    imageLinks?: {
-      thumbnail: string;
-    };
-    publishedDate: string;
-  };
-}
-
-function toBook(volume: GoogleVolume): BookModel {
-  try {
-    return {
-      googleId: volume.id,
-      authors: volume.volumeInfo.authors,
-      categories: volume.volumeInfo.categories,
-      description: volume.volumeInfo.description,
-      pageCount: volume.volumeInfo.pageCount,
-      publisher: volume.volumeInfo.publisher,
-      title: volume.volumeInfo.title,
-      thumbnail: volume.volumeInfo.imageLinks?.thumbnail,
-      publishedDate: new Date(volume.volumeInfo.publishedDate),
-    };
-  } catch (error: unknown) {
-    console.error(`Failed to map ${volume.id} - ${error}`);
-    throw error;
-  }
-}
+import { GoogleVolumeListResponse, toBook } from "@/models/googlevolumes";
 
 async function searchBooks(searchTerm: string): Promise<BookModel[]> {
   const url = new URL("https://www.googleapis.com/books/v1/volumes");
