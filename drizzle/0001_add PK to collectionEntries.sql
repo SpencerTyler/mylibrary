@@ -1,0 +1,1 @@
+ALTER TABLE "collectionEntries" ADD COLUMN "id" serial PRIMARY KEY NOT NULL;

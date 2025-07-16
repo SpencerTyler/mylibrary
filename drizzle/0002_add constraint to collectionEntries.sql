@@ -1,0 +1,1 @@
+ALTER TABLE "collectionEntries" ADD CONSTRAINT "collectionEntries_googleId_unique" UNIQUE("googleId");

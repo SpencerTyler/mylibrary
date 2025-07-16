@@ -1,0 +1,52 @@
+{
+  "id": "1babf171-84d6-4fa4-8676-b267f5e522bc",
+  "prevId": "c6b715e4-998b-4514-b0f7-322ac92138ba",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.collectionEntries": {
+      "name": "collectionEntries",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "googleId": {
+          "name": "googleId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "collectionEntries_googleId_unique": {
+          "name": "collectionEntries_googleId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "googleId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -8,6 +8,20 @@
       "when": 1749004705862,
       "tag": "0000_create table collectionEntries",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750817508197,
+      "tag": "0001_add PK to collectionEntries",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1752024556516,
+      "tag": "0002_add constraint to collectionEntries",
+      "breakpoints": true
     }
   ]
 }
