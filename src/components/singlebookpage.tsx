@@ -7,7 +7,7 @@ interface BookProps {
 
 export default function SingleBookPage({ info }: BookProps) {
   return (
-    <div className="bg-slate-100 p-4 rounded flex flex-row gap-4">
+    <div className="bg-slate-100 p-4 rounded-sm flex flex-row gap-4">
       <div className="hidden md:block min-w-[128px]">
         {info.thumbnail && <img src={info.thumbnail} alt="Book Cover" />}
       </div>
@@ -19,7 +19,7 @@ export default function SingleBookPage({ info }: BookProps) {
           <div className="md:hidden">
             {info.thumbnail && <img src={info.thumbnail} alt="Book Cover" />}
           </div>
-          <div className="bg-violet-100 size-full grow rounded p-4 flex flex-col gap-1">
+          <div className="bg-violet-100 size-full grow rounded-sm p-4 flex flex-col gap-1">
             <div>
               <b>Author:</b> {info.authors}
             </div>

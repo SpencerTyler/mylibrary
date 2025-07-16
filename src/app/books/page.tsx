@@ -46,7 +46,7 @@ export default async function Books({
       <BookSearch initialSearchTerm={searchTerm} />
 
       {books.length === 0 && trimmedSearchTerm && (
-        <div className="bg-red-100 rounded p-4 ">
+        <div className="bg-red-100 rounded-sm p-4 ">
           No Results found for {searchTerm}
         </div>
       )}
