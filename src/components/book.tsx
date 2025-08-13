@@ -3,15 +3,21 @@ import { addBook } from "@/lib/actions";
 import { Book as BookModel } from "@/models/books";
 import Link from "next/link";
 import { useState } from "react";
+import { twMerge } from "tailwind-merge";
+import { Toast } from "@base-ui-components/react";
 
 interface BookProps {
   info: BookModel;
+  inCollection: boolean;
 }
 
 type BookAddState = "In Collection" | "Saving" | "Not in Collection";
 
-export default function Book({ info }: BookProps) {
-  const [state, setState] = useState<BookAddState>("Not in Collection");
+export default function Book({ info, inCollection }: BookProps) {
+  const toastManager = Toast.useToastManager();
+  const [state, setState] = useState<BookAddState>(
+    inCollection ? "In Collection" : "Not in Collection"
+  );
 
   const handleAdd = async () => {
     if (state !== "Not in Collection") {
@@ -19,8 +25,16 @@ export default function Book({ info }: BookProps) {
     }
     setState("Saving");
     const result = await addBook(info.googleId);
-    console.log(result);
-    setState("In Collection");
+    if (result.error) {
+      toastManager.add({
+        title: "Error",
+        description: result.error,
+        type: "danger",
+      });
+      setState("Not in Collection");
+    } else {
+      setState("In Collection");
+    }
   };
 
   return (
@@ -34,8 +48,14 @@ export default function Book({ info }: BookProps) {
             <h3 className="font-semibold text-lg md:text-xl">{info.title}</h3>
           </Link>
           <button
-            className="bg-sky-800 px-3 py-1 rounded-sm text-neutral-100"
+            className={twMerge(
+              "bg-gray-400 px-3 py-1 rounded-sm text-neutral-100 cursor-pointer",
+              "disabled:cursor-not-allowed",
+              state === "Saving" && "bg-green-800",
+              state === "Not in Collection" && "bg-sky-800"
+            )}
             onClick={handleAdd}
+            disabled={state !== "Not in Collection"}
           >
             {state === "Not in Collection" && "Add to Collection"}
             {state === "Saving" && "Saving..."}

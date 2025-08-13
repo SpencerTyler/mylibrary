@@ -2,6 +2,7 @@ import Book from "@/components/book";
 import { Book as BookModel } from "@/models/books";
 import BookSearch from "./BookSearch";
 import { GoogleVolumeListResponse, toBook } from "@/models/googlevolumes";
+import { getBooks } from "@/lib/actions";
 
 async function searchBooks(searchTerm: string): Promise<BookModel[]> {
   const url = new URL("https://www.googleapis.com/books/v1/volumes");
@@ -41,6 +42,9 @@ export default async function Books({
     }
   }
 
+  const booksInCollectionResult = await getBooks();
+  const booksInCollection = booksInCollectionResult.data || [];
+
   return (
     <div className="flex flex-col gap-6 p-4">
       <BookSearch initialSearchTerm={searchTerm} />
@@ -52,7 +56,11 @@ export default async function Books({
       )}
 
       {books.map((book) => (
-        <Book key={book.googleId} info={book} />
+        <Book
+          key={book.googleId}
+          info={book}
+          inCollection={booksInCollection.includes(book.googleId)}
+        />
       ))}
     </div>
   );
