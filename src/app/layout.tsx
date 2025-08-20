@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Toasts from "@/components/toasts";
 import "./globals.css";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "My Library",
@@ -15,7 +16,17 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <div className="isolate">
-          <Toasts>{children}</Toasts>
+          <Toasts>
+            <section className="p-4 flex flex-col gap-4 min-h-screen">
+              <header>
+                <Link href="/" className="cursor-pointer hover:underline">
+                  <h1 className="text-3xl">MyLibrary</h1>
+                </Link>
+              </header>
+              <div className="grow">{children}</div>
+              <footer className="">footer</footer>
+            </section>
+          </Toasts>
         </div>
       </body>
     </html>

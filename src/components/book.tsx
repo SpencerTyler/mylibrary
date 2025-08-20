@@ -77,7 +77,7 @@ export default function Book({ info, inCollection }: BookProps) {
               <b>Publisher:</b> {info.publisher}
             </div>
             <div>
-              <b>Date Publish:</b> {info.publishedDate.toDateString()}
+              <b>Date Publish:</b> {info.publishedDate?.toDateString() ?? "-"}
             </div>
             <div>
               <b>Categories:</b> {info.categories}

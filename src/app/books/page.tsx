@@ -46,7 +46,7 @@ export default async function Books({
   const booksInCollection = booksInCollectionResult.data || [];
 
   return (
-    <div className="flex flex-col gap-6 p-4">
+    <div className="flex flex-col gap-6">
       <BookSearch initialSearchTerm={searchTerm} />
 
       {books.length === 0 && trimmedSearchTerm && (

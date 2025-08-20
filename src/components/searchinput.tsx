@@ -15,6 +15,7 @@ export default function SearchInput({ value, onSearch }: SearchInputProps) {
       onChange={(e) => {
         onSearch?.(e.target.value);
       }}
+      autoFocus
     />
   );
 }
