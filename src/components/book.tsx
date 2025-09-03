@@ -3,8 +3,8 @@ import { addBook } from "@/lib/actions";
 import { Book as BookModel } from "@/models/books";
 import Link from "next/link";
 import { useState } from "react";
-import { twMerge } from "tailwind-merge";
 import { Toast } from "@base-ui-components/react";
+import Button from "./button";
 
 interface BookProps {
   info: BookModel;
@@ -47,20 +47,15 @@ export default function Book({ info, inCollection }: BookProps) {
           <Link href={`/books/${info.googleId}`}>
             <h3 className="font-semibold text-lg md:text-xl">{info.title}</h3>
           </Link>
-          <button
-            className={twMerge(
-              "bg-gray-400 px-3 py-1 rounded-sm text-neutral-100 cursor-pointer",
-              "disabled:cursor-not-allowed",
-              state === "Saving" && "bg-green-800",
-              state === "Not in Collection" && "bg-sky-800"
-            )}
+          <Button
+            variant="primary"
             onClick={handleAdd}
             disabled={state !== "Not in Collection"}
           >
             {state === "Not in Collection" && "Add to Collection"}
             {state === "Saving" && "Saving..."}
             {state === "In Collection" && "In Collection"}
-          </button>
+          </Button>
         </div>
         <div className="flex flex-row gap-2">
           <div className="md:hidden">

@@ -4,6 +4,7 @@ import { drizzle } from "drizzle-orm/neon-http";
 import { collectionEntry } from "@/db/schema";
 import { ActionResult, success, error } from "./action_result";
 import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 function getDb() {
   return drizzle(process.env.POSTGRES_URL ?? "");
@@ -26,6 +27,27 @@ export async function addBook(id: string): Promise<ActionResult> {
   } catch (err) {
     console.error(err);
     return error("Failed to add book to collection");
+  }
+}
+
+export async function removeBook(id: string): Promise<ActionResult> {
+  try {
+    console.log("removing", id);
+    const db = getDb();
+    const existing = await db
+      .select()
+      .from(collectionEntry)
+      .where(eq(collectionEntry.googleId, id));
+    if (existing.length === 0) {
+      return error("Book not in collection");
+    }
+    await db.delete(collectionEntry).where(eq(collectionEntry.googleId, id));
+
+    revalidatePath("/");
+    return success();
+  } catch (err) {
+    console.error(err);
+    return error("Failed to remove book from collection");
   }
 }
 
