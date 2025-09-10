@@ -43,7 +43,8 @@ export default async function Books({
   }
 
   const booksInCollectionResult = await getBooks();
-  const booksInCollection = booksInCollectionResult.data || [];
+  const booksInCollection =
+    booksInCollectionResult.data?.map(({ googleId }) => googleId) || [];
 
   return (
     <div className="flex flex-col gap-6">

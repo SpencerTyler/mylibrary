@@ -1,10 +1,13 @@
 "use server";
 
 import { drizzle } from "drizzle-orm/neon-http";
-import { collectionEntry } from "@/db/schema";
+import { collectionEntry, googleVolume } from "@/db/schema";
 import { ActionResult, success, error } from "./action_result";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { fetchBook } from "./googleapi";
+import { format, parse } from "date-fns";
+import { Book } from "@/models/books";
 
 function getDb() {
   return drizzle(process.env.POSTGRES_URL ?? "");
@@ -20,6 +23,31 @@ export async function addBook(id: string): Promise<ActionResult> {
     if (existing.length > 0) {
       return error("Book already in collection");
     }
+
+    const existingVolume = await db
+      .select()
+      .from(googleVolume)
+      .where(eq(googleVolume.id, id));
+    if (existingVolume.length === 0) {
+      const newBook = await fetchBook(id);
+      await db
+        .insert(googleVolume)
+        .values({
+          id: newBook.googleId,
+          title: newBook.title,
+          authors: newBook.authors,
+          thumbnail: newBook.thumbnail ?? null,
+          pageCount: newBook.pageCount,
+          publisher: newBook.publisher,
+          publishedDate: newBook.publishedDate
+            ? format(newBook.publishedDate, "yyyy-MM-dd")
+            : null,
+          description: newBook.description,
+          categories: newBook.categories,
+        })
+        .onConflictDoNothing();
+    }
+
     await db.insert(collectionEntry).values({ googleId: id });
     console.log("adding", id);
 
@@ -51,14 +79,27 @@ export async function removeBook(id: string): Promise<ActionResult> {
   }
 }
 
-export async function getBooks(): Promise<ActionResult<string[]>> {
+export async function getBooks(): Promise<ActionResult<Book[]>> {
   try {
     const db = getDb();
-    const existing = await db.select().from(collectionEntry);
-    const googleIds = existing
-      .map((book) => book.googleId)
-      .filter((book): book is string => Boolean(book));
-    return success(googleIds);
+    const existing = await db
+      .select()
+      .from(collectionEntry)
+      .innerJoin(googleVolume, eq(collectionEntry.googleId, googleVolume.id));
+    const books = existing.map(({ googleVolumes }) => ({
+      googleId: googleVolumes.id,
+      title: googleVolumes.title,
+      authors: googleVolumes.authors,
+      thumbnail: googleVolumes.thumbnail ?? undefined,
+      pageCount: googleVolumes.pageCount,
+      publisher: googleVolumes.publisher,
+      publishedDate: googleVolumes.publishedDate
+        ? parse(googleVolumes.publishedDate, "yyyy-MM-dd", new Date())
+        : undefined,
+      description: googleVolumes.description,
+      categories: googleVolumes.categories,
+    }));
+    return success(books);
   } catch (err) {
     console.error(err);
     return error("Failed to get books from collection");

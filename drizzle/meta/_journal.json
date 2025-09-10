@@ -22,6 +22,13 @@
       "when": 1752024556516,
       "tag": "0002_add constraint to collectionEntries",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1756863574212,
+      "tag": "0003_add googleVolume",
+      "breakpoints": true
     }
   ]
 }

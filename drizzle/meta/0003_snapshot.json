@@ -1,0 +1,133 @@
+{
+  "id": "4390a315-e28f-4aa7-8821-a7bf5e4c7617",
+  "prevId": "1babf171-84d6-4fa4-8676-b267f5e522bc",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.collectionEntries": {
+      "name": "collectionEntries",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "googleId": {
+          "name": "googleId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "collectionEntries_googleId_googleVolumes_id_fk": {
+          "name": "collectionEntries_googleId_googleVolumes_id_fk",
+          "tableFrom": "collectionEntries",
+          "tableTo": "googleVolumes",
+          "columnsFrom": [
+            "googleId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "collectionEntries_googleId_unique": {
+          "name": "collectionEntries_googleId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "googleId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.googleVolumes": {
+      "name": "googleVolumes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "authors": {
+          "name": "authors",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "thumbnail": {
+          "name": "thumbnail",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pageCount": {
+          "name": "pageCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "publisher": {
+          "name": "publisher",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "publishedDate": {
+          "name": "publishedDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "categories": {
+          "name": "categories",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

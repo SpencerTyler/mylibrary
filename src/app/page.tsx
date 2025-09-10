@@ -14,8 +14,8 @@ export default async function Home() {
         Add Book
       </Link>
       <div className="flex flex-col gap-2">
-        {booksInCollection.data?.map((bookId) => (
-          <ShelvedBook bookId={bookId} key={bookId} />
+        {booksInCollection.data?.map((book) => (
+          <ShelvedBook book={book} key={book.googleId} />
         ))}
       </div>
     </div>

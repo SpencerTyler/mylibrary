@@ -10,8 +10,8 @@ export interface GoogleVolume {
   volumeInfo: {
     title: string;
     authors: string[];
-    categories: string[];
-    description: string;
+    categories?: string[];
+    description?: string;
     pageCount: number;
     publisher: string;
     imageLinks?: {
@@ -26,8 +26,8 @@ export function toBook(volume: GoogleVolume): BookModel {
     return {
       googleId: volume.id,
       authors: volume.volumeInfo.authors,
-      categories: volume.volumeInfo.categories,
-      description: volume.volumeInfo.description,
+      categories: volume.volumeInfo.categories ?? [],
+      description: volume.volumeInfo.description ?? "",
       pageCount: volume.volumeInfo.pageCount,
       publisher: volume.volumeInfo.publisher,
       title: volume.volumeInfo.title,
