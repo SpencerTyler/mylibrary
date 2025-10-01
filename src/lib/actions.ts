@@ -1,20 +1,15 @@
 "use server";
 
-import { drizzle } from "drizzle-orm/neon-http";
 import { collectionEntry, googleVolume } from "@/db/schema";
 import { ActionResult, success, error } from "./action_result";
 import { eq } from "drizzle-orm";
 import { fetchBook } from "./googleapi";
 import { format, parse } from "date-fns";
 import { Book } from "@/models/books";
-
-function getDb() {
-  return drizzle(process.env.POSTGRES_URL ?? "");
-}
+import { db } from "./db";
 
 export async function addBook(id: string): Promise<ActionResult> {
   try {
-    const db = getDb();
     const existing = await db
       .select()
       .from(collectionEntry)
@@ -60,7 +55,6 @@ export async function addBook(id: string): Promise<ActionResult> {
 export async function removeBook(id: string): Promise<ActionResult> {
   try {
     console.log("removing", id);
-    const db = getDb();
     const existing = await db
       .select()
       .from(collectionEntry)
@@ -79,7 +73,6 @@ export async function removeBook(id: string): Promise<ActionResult> {
 
 export async function getBooks(): Promise<ActionResult<Book[]>> {
   try {
-    const db = getDb();
     const existing = await db
       .select()
       .from(collectionEntry)
