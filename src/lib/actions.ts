@@ -4,7 +4,6 @@ import { drizzle } from "drizzle-orm/neon-http";
 import { collectionEntry, googleVolume } from "@/db/schema";
 import { ActionResult, success, error } from "./action_result";
 import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { fetchBook } from "./googleapi";
 import { format, parse } from "date-fns";
 import { Book } from "@/models/books";
@@ -71,7 +70,6 @@ export async function removeBook(id: string): Promise<ActionResult> {
     }
     await db.delete(collectionEntry).where(eq(collectionEntry.googleId, id));
 
-    revalidatePath("/");
     return success();
   } catch (err) {
     console.error(err);

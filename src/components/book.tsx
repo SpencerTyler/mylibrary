@@ -1,41 +1,17 @@
 "use client";
-import { addBook } from "@/lib/actions";
 import { Book as BookModel } from "@/models/books";
 import Link from "next/link";
 import { useState } from "react";
-import { Toast } from "@base-ui-components/react";
-import Button from "./button";
+import { addBook } from "@/lib/actions";
+import ActionButton from "./actionbutton";
 
 interface BookProps {
   info: BookModel;
   inCollection: boolean;
 }
 
-type BookAddState = "In Collection" | "Saving" | "Not in Collection";
-
 export default function Book({ info, inCollection }: BookProps) {
-  const toastManager = Toast.useToastManager();
-  const [state, setState] = useState<BookAddState>(
-    inCollection ? "In Collection" : "Not in Collection"
-  );
-
-  const handleAdd = async () => {
-    if (state !== "Not in Collection") {
-      return;
-    }
-    setState("Saving");
-    const result = await addBook(info.googleId);
-    if (result.error) {
-      toastManager.add({
-        title: "Error",
-        description: result.error,
-        type: "danger",
-      });
-      setState("Not in Collection");
-    } else {
-      setState("In Collection");
-    }
-  };
+  const [isInCollection, setIsInCollection] = useState(inCollection);
 
   return (
     <div className="bg-slate-100 p-4 rounded-sm flex flex-row gap-4">
@@ -47,15 +23,14 @@ export default function Book({ info, inCollection }: BookProps) {
           <Link href={`/books/${info.googleId}`}>
             <h3 className="font-semibold text-lg md:text-xl">{info.title}</h3>
           </Link>
-          <Button
+          <ActionButton
             variant="primary"
-            onClick={handleAdd}
-            disabled={state !== "Not in Collection"}
+            action={() => addBook(info.googleId)}
+            onSuccess={() => setIsInCollection(true)}
+            disabled={isInCollection}
           >
-            {state === "Not in Collection" && "Add to Collection"}
-            {state === "Saving" && "Saving..."}
-            {state === "In Collection" && "In Collection"}
-          </Button>
+            {!isInCollection ? "Add to Collection" : "In Collection"}
+          </ActionButton>
         </div>
         <div className="flex flex-row gap-2">
           <div className="md:hidden">

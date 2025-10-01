@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "default" | "primary" | "danger";
 };
 
