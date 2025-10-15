@@ -1,14 +1,14 @@
-import LoginButton from "@/components/loginbutton";
 import ShelvedBook from "@/components/shelvedbook";
 import { getBooks } from "@/lib/actions";
+import { isLoggedIn } from "@/Utils/Navigation";
 import Link from "next/link";
 
 export default async function Home() {
-  const booksInCollection = await getBooks();
+  const loggedIn = await isLoggedIn();
+  const booksInCollection = loggedIn ? (await getBooks()).data : [];
 
   return (
     <div className="flex flex-col gap-4">
-      <LoginButton />
       <Link
         href="/books"
         className="self-center border border-gray-800 rounded py-5 md:px-15 w-full md:w-auto text-center bg-cyan-100 hover:bg-cyan-200 cursor-pointer"
@@ -16,7 +16,7 @@ export default async function Home() {
         Add Book
       </Link>
       <div className="flex flex-col gap-2">
-        {booksInCollection.data?.map((book) => (
+        {booksInCollection?.map((book) => (
           <ShelvedBook book={book} key={book.googleId} />
         ))}
       </div>

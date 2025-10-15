@@ -7,5 +7,9 @@ export default function LoginButton() {
   const signIn = async () => {
     await authClient.signIn.social({ provider: "google" });
   };
-  return <Button onClick={signIn}>Login</Button>;
+  return (
+    <Button variant="primary" onClick={signIn}>
+      Login with Google
+    </Button>
+  );
 }
