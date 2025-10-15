@@ -1,6 +1,6 @@
 import ShelvedBook from "@/components/shelvedbook";
 import { getBooks } from "@/lib/actions";
-import { isLoggedIn } from "@/Utils/Navigation";
+import { isLoggedIn } from "@/Utils/session";
 import Link from "next/link";
 
 export default async function Home() {

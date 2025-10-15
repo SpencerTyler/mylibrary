@@ -6,15 +6,22 @@ import {
   date,
   boolean,
   timestamp,
+  unique,
 } from "drizzle-orm/pg-core";
 
-export const collectionEntry = pgTable("collectionEntries", {
-  id: serial().primaryKey(),
-  googleId: text()
-    .notNull()
-    .references(() => googleVolume.id)
-    .unique(),
-});
+export const collectionEntry = pgTable(
+  "collectionEntries",
+  {
+    id: serial().primaryKey(),
+    googleId: text()
+      .notNull()
+      .references(() => googleVolume.id),
+    userId: text()
+      .notNull()
+      .references(() => user.id),
+  },
+  (t) => [unique().on(t.googleId, t.userId)]
+);
 
 export const googleVolume = pgTable("googleVolumes", {
   id: text().primaryKey(),

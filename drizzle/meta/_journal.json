@@ -36,6 +36,13 @@
       "when": 1759284477142,
       "tag": "0004_add auth",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1760494842565,
+      "tag": "0005_add userId to collection",
+      "breakpoints": true
     }
   ]
 }

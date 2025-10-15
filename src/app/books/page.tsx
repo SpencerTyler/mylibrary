@@ -3,7 +3,7 @@ import { Book as BookModel } from "@/models/books";
 import BookSearch from "./BookSearch";
 import { GoogleVolumeListResponse, toBook } from "@/models/googlevolumes";
 import { getBooks } from "@/lib/actions";
-import { enforceLogin } from "@/Utils/Navigation";
+import { enforceLogin } from "@/Utils/session";
 
 async function searchBooks(searchTerm: string): Promise<BookModel[]> {
   const url = new URL("https://www.googleapis.com/books/v1/volumes");

@@ -1,7 +1,7 @@
 import SingleBookPage from "@/components/singlebookpage";
 import { fetchBook } from "@/lib/googleapi";
 import { Book as BookModel } from "@/models/books";
-import { enforceLogin } from "@/Utils/Navigation";
+import { enforceLogin } from "@/Utils/session";
 
 export default async function SingleBook({
   params,
