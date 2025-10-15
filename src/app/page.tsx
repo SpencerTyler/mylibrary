@@ -1,9 +1,11 @@
 import ShelvedBook from "@/components/shelvedbook";
 import { getBooks } from "@/lib/actions";
+import { isLoggedIn } from "@/Utils/session";
 import Link from "next/link";
 
 export default async function Home() {
-  const booksInCollection = await getBooks();
+  const loggedIn = await isLoggedIn();
+  const booksInCollection = loggedIn ? (await getBooks()).data : [];
 
   return (
     <div className="flex flex-col gap-4">
@@ -14,7 +16,7 @@ export default async function Home() {
         Add Book
       </Link>
       <div className="flex flex-col gap-2">
-        {booksInCollection.data?.map((book) => (
+        {booksInCollection?.map((book) => (
           <ShelvedBook book={book} key={book.googleId} />
         ))}
       </div>

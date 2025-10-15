@@ -1,24 +1,33 @@
 "use server";
 
-import { drizzle } from "drizzle-orm/neon-http";
 import { collectionEntry, googleVolume } from "@/db/schema";
 import { ActionResult, success, error } from "./action_result";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { fetchBook } from "./googleapi";
 import { format, parse } from "date-fns";
 import { Book } from "@/models/books";
-
-function getDb() {
-  return drizzle(process.env.POSTGRES_URL ?? "");
-}
+import { db } from "./db";
+import { getSession } from "@/Utils/session";
 
 export async function addBook(id: string): Promise<ActionResult> {
+  const session = await getSession();
+
+  if (!session) {
+    return error("Not Authenticated");
+  }
+
+  const userId = session.user.id;
+
   try {
-    const db = getDb();
     const existing = await db
       .select()
       .from(collectionEntry)
-      .where(eq(collectionEntry.googleId, id));
+      .where(
+        and(
+          eq(collectionEntry.googleId, id),
+          eq(collectionEntry.userId, userId)
+        )
+      );
     if (existing.length > 0) {
       return error("Book already in collection");
     }
@@ -47,7 +56,7 @@ export async function addBook(id: string): Promise<ActionResult> {
         .onConflictDoNothing();
     }
 
-    await db.insert(collectionEntry).values({ googleId: id });
+    await db.insert(collectionEntry).values({ googleId: id, userId });
     console.log("adding", id);
 
     return success();
@@ -58,17 +67,31 @@ export async function addBook(id: string): Promise<ActionResult> {
 }
 
 export async function removeBook(id: string): Promise<ActionResult> {
+  const session = await getSession();
+
+  if (!session) {
+    return error("Not Authenticated");
+  }
+
+  const userId = session.user.id;
+
   try {
     console.log("removing", id);
-    const db = getDb();
     const existing = await db
       .select()
       .from(collectionEntry)
-      .where(eq(collectionEntry.googleId, id));
+      .where(
+        and(
+          eq(collectionEntry.googleId, id),
+          eq(collectionEntry.userId, userId)
+        )
+      );
     if (existing.length === 0) {
       return error("Book not in collection");
     }
-    await db.delete(collectionEntry).where(eq(collectionEntry.googleId, id));
+    await db
+      .delete(collectionEntry)
+      .where(eq(collectionEntry.id, existing[0].id));
 
     return success();
   } catch (err) {
@@ -78,12 +101,25 @@ export async function removeBook(id: string): Promise<ActionResult> {
 }
 
 export async function getBooks(): Promise<ActionResult<Book[]>> {
+  const session = await getSession();
+
+  if (!session) {
+    return error("Not Authenticated");
+  }
+
+  const userId = session.user.id;
+
   try {
-    const db = getDb();
     const existing = await db
       .select()
       .from(collectionEntry)
-      .innerJoin(googleVolume, eq(collectionEntry.googleId, googleVolume.id));
+      .innerJoin(
+        googleVolume,
+        and(
+          eq(collectionEntry.googleId, googleVolume.id),
+          eq(collectionEntry.userId, userId)
+        )
+      );
     const books = existing.map(({ googleVolumes }) => ({
       googleId: googleVolumes.id,
       title: googleVolumes.title,
